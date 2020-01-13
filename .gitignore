@@ -1,0 +1,7 @@
+.gradle
+.idea
+.git
+out
+target
+HELP.md
+*.iml
