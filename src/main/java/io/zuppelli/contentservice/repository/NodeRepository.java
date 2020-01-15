@@ -14,4 +14,6 @@ public interface NodeRepository extends MongoRepository<Node<? extends NodeReply
     @Query("{'children.user': ?0 }")
     List<Node> findAllByChildrenAuthor(UUID user);
 
+    List<Node<?>> findAllByType(String type);
+
 }

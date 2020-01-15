@@ -1,12 +1,13 @@
 package io.zuppelli.contentservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.zuppelli.contentservice.annotation.UpdateDates;
 import io.zuppelli.contentservice.model.base.BaseEntity;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
+import java.util.Collections;
 
 public class Node<T extends NodeReply> extends BaseEntity {
     private String type;
@@ -23,16 +24,7 @@ public class Node<T extends NodeReply> extends BaseEntity {
 
     private UUID author;
 
-    public UUID getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(UUID author) {
-        this.author = author;
-    }
-
-    @JsonIgnore
-    private Set<T> children = new HashSet<>();
+    private List<T> children = new ArrayList<>();
 
     public Course getCourse() {
         return course;
@@ -82,11 +74,24 @@ public class Node<T extends NodeReply> extends BaseEntity {
         this.limitDate = limitDate;
     }
 
-    public Set<T> getChildren() {
-        return children;
+    public List<T> getChildren() {
+        return Collections.unmodifiableList(children);
     }
 
-    public void setChildren(Set<T> children) {
+    @UpdateDates
+    public void addChild(T child) {
+        this.children.add(child);
+    }
+
+    public void setChildren(List<T> children) {
         this.children = children;
+    }
+
+    public UUID getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UUID author) {
+        this.author = author;
     }
 }
