@@ -2,6 +2,7 @@ package io.zuppelli.contentservice.model.partial;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.zuppelli.contentservice.service.Builder;
 import org.springframework.data.annotation.Id;
 
 
@@ -73,5 +74,20 @@ public abstract class Element {
 
     public void setWeight(Integer weight) {
         this.weight = weight;
+    }
+
+    public static Builder<? extends Element> builder(Class<? extends Element> clzz) {
+        return new ElementBuilder(clzz);
+    }
+
+    private static class ElementBuilder<T extends Element> extends Builder<T> {
+        public ElementBuilder(Class<T> clazz) {
+            super(clazz);
+        }
+
+        @Override
+        protected void prebuild() {
+
+        }
     }
 }

@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Stack;
 
 public abstract class Builder<T> {
     private T obj;
@@ -45,8 +47,11 @@ public abstract class Builder<T> {
                 sb.append(StringUtils.capitalize(method));
                 method = sb.toString();
             }
+            Stack<Class> interfaces = new Stack<>();
 
-            Method m = obj.getClass().getMethod(method, content.getClass());
+            interfaces.addAll(Arrays.asList(content.getClass().getInterfaces()));
+
+            Method m = getMethod(method, content.getClass(), interfaces);
 
             m.invoke(obj, content);
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
@@ -54,5 +59,14 @@ public abstract class Builder<T> {
         }
 
         return this;
+    }
+
+    private Method getMethod(String methodName, Class clazz, Stack<Class> interfaces) throws NoSuchMethodException {
+        try {
+            return obj.getClass().getMethod(methodName, clazz);
+        } catch (NoSuchMethodException e) {
+            if(interfaces.empty()) throw e;
+            return getMethod(methodName, interfaces.pop(), interfaces);
+        }
     }
 }

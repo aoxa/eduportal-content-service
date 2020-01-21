@@ -3,6 +3,7 @@ package io.zuppelli.contentservice.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.zuppelli.contentservice.annotation.GenerateUUID;
 import io.zuppelli.contentservice.model.partial.Element;
+import io.zuppelli.contentservice.service.Builder;
 
 import java.util.*;
 
@@ -14,21 +15,29 @@ public class Survey extends Node {
         setType(TYPE);
     }
 
-    @JsonIgnore
-    private Set<Element> elements = new HashSet<>();
+    private List<Element> elements = new ArrayList<>();
 
-    public List<Element> getSortedElements() {
-        List<Element> result = new ArrayList<>(this.elements);
-        result.sort(Comparator.comparing(Element::getWeight));
-
-        return result;
-    }
-
-    public Set<Element> getElements() {
+    public List<Element> getElements() {
         return elements;
     }
 
-    public void setElements(Set<Element> elements) {
+    public void setElements(List<Element> elements) {
         this.elements = elements;
+    }
+
+    public static Builder<Survey> getBuilder() {
+        return new SurveyBuilder();
+    }
+
+    private static class SurveyBuilder extends Builder<Survey> {
+
+        public SurveyBuilder() {
+            super(Survey.class);
+        }
+
+        @Override
+        protected void prebuild() {
+
+        }
     }
 }

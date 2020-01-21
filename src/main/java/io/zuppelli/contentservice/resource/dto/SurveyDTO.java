@@ -1,15 +1,20 @@
 package io.zuppelli.contentservice.resource.dto;
 
-public class SurveyDTO {
-    private String body;
-    private String title;
+import java.util.Date;
+import java.util.List;
 
-    public String getBody() {
-        return body;
+public class SurveyDTO {
+    private String title;
+    private String description;
+    private Date expiry;
+    private List<ElementDTO> elements;
+
+    public String getDescription() {
+        return description;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTitle() {
@@ -18,5 +23,21 @@ public class SurveyDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Date getExpiry() {
+        return expiry;
+    }
+
+    public void setExpiry(Date expiry) {
+        this.expiry = expiry;
+    }
+
+    public List<ElementDTO> getElements() {
+        return elements;
+    }
+
+    public void setElements(List<ElementDTO> elements) {
+        this.elements = elements;
     }
 }

@@ -1,6 +1,5 @@
 package io.zuppelli.contentservice.model;
 
-import io.zuppelli.contentservice.annotation.UpdateDates;
 import io.zuppelli.contentservice.model.base.BaseEntity;
 
 import java.util.List;
@@ -78,7 +77,6 @@ public class Node<T extends NodeReply> extends BaseEntity {
         return Collections.unmodifiableList(children);
     }
 
-    @UpdateDates
     public void addChild(T child) {
         this.children.add(child);
     }
