@@ -1,6 +1,8 @@
 package io.zuppelli.contentservice.model.partial;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Option extends Element {
     private String value;
 

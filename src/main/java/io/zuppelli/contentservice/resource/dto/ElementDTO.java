@@ -5,6 +5,7 @@ import java.util.List;
 public class ElementDTO {
     private String type;
     private String title;
+    private String name;
     private String tip;
     private List<ValueDTO> values;
 
@@ -38,5 +39,13 @@ public class ElementDTO {
 
     public void setTip(String tip) {
         this.tip = tip;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

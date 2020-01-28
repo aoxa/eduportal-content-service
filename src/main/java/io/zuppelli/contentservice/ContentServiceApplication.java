@@ -14,9 +14,6 @@ import java.util.UUID;
 @SpringBootApplication
 public class ContentServiceApplication {
 
-	@Autowired
-	NodeRepository nodeRepository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(ContentServiceApplication.class, args);
 	}
