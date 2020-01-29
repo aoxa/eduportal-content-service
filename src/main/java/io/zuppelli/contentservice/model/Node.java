@@ -23,8 +23,6 @@ public class Node<T extends NodeReply> extends BaseEntity {
 
     private UUID author;
 
-    private List<T> children = new ArrayList<>();
-
     public Course getCourse() {
         return course;
     }
@@ -71,18 +69,6 @@ public class Node<T extends NodeReply> extends BaseEntity {
 
     public void setLimitDate(Date limitDate) {
         this.limitDate = limitDate;
-    }
-
-    public List<T> getChildren() {
-        return Collections.unmodifiableList(children);
-    }
-
-    public void addChild(T child) {
-        this.children.add(child);
-    }
-
-    public void setChildren(List<T> children) {
-        this.children = children;
     }
 
     public UUID getAuthor() {

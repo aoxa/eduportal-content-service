@@ -1,11 +1,17 @@
 package io.zuppelli.contentservice.model;
 
+import io.zuppelli.contentservice.annotation.GenerateUUID;
+import io.zuppelli.contentservice.annotation.UpdateDates;
 import io.zuppelli.contentservice.model.partial.Element;
 import io.zuppelli.contentservice.service.Builder;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
+@GenerateUUID
+@UpdateDates
 public class SurveyReply extends NodeReply<Survey> {
 
     private Float score;
@@ -40,7 +46,6 @@ public class SurveyReply extends NodeReply<Survey> {
 
         @Override
         protected void prebuild() {
-
         }
     }
 }

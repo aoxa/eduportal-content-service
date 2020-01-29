@@ -6,6 +6,7 @@ import io.zuppelli.contentservice.model.partial.Element;
 import io.zuppelli.contentservice.model.partial.InputText;
 import io.zuppelli.contentservice.model.partial.Option;
 import io.zuppelli.contentservice.model.partial.Select;
+import io.zuppelli.contentservice.repository.NodeReplyRepository;
 import io.zuppelli.contentservice.repository.NodeRepository;
 import io.zuppelli.contentservice.resource.dto.ArticleDTO;
 import io.zuppelli.contentservice.resource.dto.CommentDTO;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,6 +30,9 @@ import java.util.stream.Collectors;
 public class SurveyResource {
     @Autowired
     private NodeRepository nodeRepository;
+
+    @Autowired
+    private NodeReplyRepository nodeReplyRepository;
 
     @Autowired
     private SurveyScoreService surveyScoreService;
@@ -99,17 +104,28 @@ public class SurveyResource {
     }
 
     @PostMapping("/{id}/reply")
-    public Survey comment(@RequestBody @Valid ReplyDTO dto, @PathVariable UUID id) {
+    public SurveyReply comment(@RequestBody @Valid ReplyDTO dto, @PathVariable UUID id) {
         Survey survey = findSurvey(id);
+
         Builder<SurveyReply> builder = SurveyReply.builder().add("elements", collectElements(dto) );
 
-        SurveyReply reply = builder.build();
+        SurveyReply reply = builder.add("parent", id).build();
 
         surveyScoreService.decorateScore(survey, reply);
 
-        survey.addChild(reply);
+        return nodeReplyRepository.save(reply);
+    }
 
-        return nodeRepository.save(survey);
+    @GetMapping("/{id}/reply")
+    public List<NodeReply> replies(@PathVariable UUID id) {
+
+        return nodeReplyRepository.findAllByParent(id);
+    }
+
+    @GetMapping("/{id}/reply/{replyId}")
+    public Optional<NodeReply> replies(@PathVariable UUID id, @PathVariable UUID replyId) {
+
+        return nodeReplyRepository.findById(replyId);
     }
 
     private Set<Element> collectElements(@RequestBody @Valid ReplyDTO dto) {
@@ -124,13 +140,19 @@ public class SurveyResource {
             } else {
                 Select el = new Select();
                 el.setName(item.getName());
-                el.setOptions(item.getValues()
-                        .stream().map((option)->{
-                            Option op = new Option();
-                            op.setName(option);
-                            return op;
-                        })
-                        .collect(Collectors.toSet()));
+                if("radio".equals(item.getType())){
+                    Option op = new Option();
+                    op.setName(item.getValue());
+                    el.getOptions().add(op);
+                } else {
+                    el.setOptions(item.getValues()
+                            .stream().map((option)->{
+                                Option op = new Option();
+                                op.setName(option);
+                                return op;
+                            })
+                            .collect(Collectors.toSet()));
+                }
 
                 element = el;
             }

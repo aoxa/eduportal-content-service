@@ -2,12 +2,14 @@ package io.zuppelli.contentservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.zuppelli.contentservice.annotation.GenerateUUID;
+import io.zuppelli.contentservice.annotation.UpdateDates;
 import io.zuppelli.contentservice.model.partial.Element;
 import io.zuppelli.contentservice.service.Builder;
 
 import java.util.*;
 
 @GenerateUUID
+@UpdateDates
 public class Survey extends Node {
     public final static String TYPE = "survey";
 
@@ -37,7 +39,7 @@ public class Survey extends Node {
 
         @Override
         protected void prebuild() {
-
+            getObj().setCreationDate(new Date());
         }
     }
 }

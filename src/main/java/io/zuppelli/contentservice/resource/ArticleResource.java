@@ -4,6 +4,8 @@ import io.zuppelli.contentservice.exception.EntityNotFoundException;
 import io.zuppelli.contentservice.model.Article;
 import io.zuppelli.contentservice.model.Comment;
 import io.zuppelli.contentservice.model.Node;
+import io.zuppelli.contentservice.model.NodeReply;
+import io.zuppelli.contentservice.repository.NodeReplyRepository;
 import io.zuppelli.contentservice.repository.NodeRepository;
 import io.zuppelli.contentservice.resource.dto.ArticleDTO;
 import io.zuppelli.contentservice.resource.dto.CommentDTO;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
 public class ArticleResource {
     @Autowired
     private NodeRepository nodeRepository;
+
+    @Autowired
+    private NodeReplyRepository nodeReplyRepository;
 
     @GetMapping
     public List<Node<?>> list() {
@@ -56,15 +61,18 @@ public class ArticleResource {
     }
 
     @PostMapping("/{id}/comment")
-    public Article comment(@RequestBody @Valid CommentDTO dto, @PathVariable UUID id) {
-        Article article = findArticle(id);
+    public NodeReply<Article> comment(@RequestBody @Valid CommentDTO dto, @PathVariable UUID id) {
         Comment comment = new Comment();
         comment.setUser(dto.getUser());
         comment.setBody(dto.getBody());
+        comment.setParent(id);
 
-        article.addChild(comment);
+        return nodeReplyRepository.save(comment);
+    }
 
-        return nodeRepository.save(article);
+    @GetMapping("/{id}/comment")
+    public List<NodeReply> comments(@PathVariable UUID id) {
+        return nodeReplyRepository.findAllByParent(id);
     }
 
     private Article findArticle(@PathVariable UUID id) {

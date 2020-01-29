@@ -41,17 +41,6 @@ public class Aspects {
             } else if( updateDates.updateModification() ) {
                 clazz.getMethod("setModificationDate", Date.class).invoke(entity, new Date());
             }
-
-            if(entity instanceof Node) {
-                updateMethodDate((Node)entity);
-            }
         }
-    }
-
-    public void updateMethodDate(Node node) {
-        node.getChildren().stream()
-                .filter(reply->null==((NodeReply) reply).getCreationDate())
-                .forEach(reply->((NodeReply) reply).setCreationDate(new Date()));
-
     }
 }
